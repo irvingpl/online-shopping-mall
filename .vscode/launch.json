@@ -1,0 +1,79 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // ──────────────────────────────────────
+    // Next.js 디버그 (서버 사이드)
+    // ──────────────────────────────────────
+    {
+      "name": "Debug: Next.js server",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/packages/web/node_modules/.bin/next",
+      "args": ["dev"],
+      "cwd": "${workspaceFolder}/packages/web",
+      "env": {
+        "NODE_OPTIONS": "--inspect"
+      },
+      "sourceMaps": true,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "- Local:.+(https?://\\S+)",
+        "uriFormat": "%s"
+      }
+    },
+
+    // ──────────────────────────────────────
+    // NestJS 디버그
+    // ──────────────────────────────────────
+    {
+      "name": "Debug: NestJS server",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@mall/api", "run", "dev"],
+      "cwd": "${workspaceFolder}",
+      "sourceMaps": true,
+      "envFile": "${workspaceFolder}/packages/api/.env",
+      "outFiles": ["${workspaceFolder}/packages/api/dist/**/*.js"],
+      "console": "integratedTerminal",
+      "restart": true
+    },
+
+    // ──────────────────────────────────────
+    // NestJS 프로세스 연결 (이미 실행 중인 경우)
+    // ──────────────────────────────────────
+    {
+      "name": "Debug: NestJS attach",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "restart": true,
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/packages/api/dist/**/*.js"],
+      "skipFiles": ["<node_internals>/**"]
+    },
+
+    // ──────────────────────────────────────
+    // Jest 테스트 디버그
+    // ──────────────────────────────────────
+    {
+      "name": "Debug: Jest (current file)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["jest", "--runInBand", "--testPathPattern", "${relativeFile}"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ],
+
+  "compounds": [
+    {
+      "name": "Debug: Full Stack",
+      "configurations": ["Debug: Next.js server", "Debug: NestJS server"],
+      "stopAll": true
+    }
+  ]
+}

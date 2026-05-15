@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      Role     @default(CUSTOMER)
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  description String
+  price       Int
+  stock       Int         @default(0)
+  categoryId  String
+  imageUrls   String[]
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("products")
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  items           OrderItem[]
+  totalAmount     Int
+  status          OrderStatus @default(PENDING)
+  recipientName   String
+  recipientPhone  String
+  zipCode         String
+  address1        String
+  address2        String
+  payment         Payment?
+  delivery        Delivery?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  order       Order   @relation(fields: [orderId], references: [id])
+  productId   String
+  product     Product @relation(fields: [productId], references: [id])
+  productName String
+  quantity    Int
+  unitPrice   Int
+
+  @@map("order_items")
+}
+
+model Payment {
+  id      String        @id @default(cuid())
+  orderId String        @unique
+  order   Order         @relation(fields: [orderId], references: [id])
+  amount  Int
+  method  PaymentMethod
+  status  PaymentStatus @default(PENDING)
+  paidAt  DateTime?
+  createdAt DateTime    @default(now())
+
+  @@map("payments")
+}
+
+model Delivery {
+  id             String         @id @default(cuid())
+  orderId        String         @unique
+  order          Order          @relation(fields: [orderId], references: [id])
+  trackingNumber String?
+  carrier        String?
+  status         DeliveryStatus @default(PREPARING)
+  estimatedAt    DateTime?
+  deliveredAt    DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@map("deliveries")
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum OrderStatus {
+  PENDING
+  PAYMENT_COMPLETED
+  PREPARING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CARD
+  BANK_TRANSFER
+  VIRTUAL_ACCOUNT
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum DeliveryStatus {
+  PREPARING
+  PICKED_UP
+  IN_TRANSIT
+  OUT_FOR_DELIVERY
+  DELIVERED
+}

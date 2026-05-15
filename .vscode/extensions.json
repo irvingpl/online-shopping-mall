@@ -1,0 +1,33 @@
+{
+  "recommendations": [
+    // TypeScript / JavaScript
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+
+    // React / Next.js
+    "dsznajder.es7-react-js-snippets",
+    "bradlc.vscode-tailwindcss",
+
+    // NestJS / Backend
+    "Prisma.prisma",
+
+    // Git
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+
+    // 컨테이너 / 인프라
+    "ms-azuretools.vscode-docker",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "redhat.vscode-yaml",
+
+    // 생산성
+    "streetsidesoftware.code-spell-checker",
+    "christian-kohler.path-intellisense",
+    "PKief.material-icon-theme"
+  ],
+  "unwantedRecommendations": [
+    // Prettier와 충돌하는 포매터
+    "hookyqr.beautify"
+  ]
+}

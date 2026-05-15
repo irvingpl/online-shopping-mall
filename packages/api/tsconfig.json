@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "module": "CommonJS",
+    "composite": true,
+    // NestJS 데코레이터 필수 옵션
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    // Prisma/NestJS 패턴상 초기화 검사 완화
+    "strictPropertyInitialization": false
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "test"]
+}
